@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AuthServer.Data.Configurations
 {
-    public class UserRefreshTokenConfiguration : IEntityTypeConfiguration<UserRefreshToken>
+    internal class UserRefreshTokenConfiguration : IEntityTypeConfiguration<UserRefreshToken>
     {
         public void Configure(EntityTypeBuilder<UserRefreshToken> builder)
         {

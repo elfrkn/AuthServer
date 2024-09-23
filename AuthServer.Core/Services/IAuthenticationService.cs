@@ -13,6 +13,6 @@ namespace AuthServer.Core.Services
         Task<Response<TokenDto>> CreateTokenAsync(LoginDto loginDto);
         Task<Response<TokenDto>> CreateTokenByRefreshAsync(string refreshToken);
         Task<Response<NoDataDto>> RevokeRefrehToken(string refreshToken);// refresh tokenı kırmak için,nulla çevirmek için
-        Task<Response<ClientTokenDto>> CreateTokenByClient(ClientTokenDto clientTokenDto);
+        Response<ClientTokenDto> CreateTokenByClient(ClientLoginDto clientLoginDto);
     }
 }

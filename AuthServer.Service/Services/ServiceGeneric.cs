@@ -17,6 +17,7 @@ namespace AuthServer.Service.Services
     public class ServiceGeneric<TEntity, TDto> : IServiceGeneric<TEntity, TDto> where TEntity : class where TDto : class
     {
         private readonly IUnitOfWork _unitOfWork;
+
         private readonly IGenericRepository<TEntity> _genericRepository;
 
         public ServiceGeneric(IUnitOfWork unitOfWork, IGenericRepository<TEntity> genericRepository)
@@ -69,8 +70,7 @@ namespace AuthServer.Service.Services
             _genericRepository.Remove(isExistEntity);
 
             await _unitOfWork.CommitAsync();
-
-            //204 durum kodu =>  No Content  => Response body'sinde hiç bir data  olmayacak.
+            //204 durum kodu =>  No Content  => Response body'sinde hiç bir dat  olmayacak.
             return Response<NoDataDto>.Success(204);
         }
 
