@@ -12,7 +12,7 @@ Eğer ki ilgili kullanıcıya ait bir refresh token var ise authServer tekrardan
 Refresh tokenın süresi dolmuş ise kullanıcı login ekranına döndürülür.
 Apilerde refresh token kullanılarak koruma altına alınmış olur.
 
-Ayrıca projede Identity bilgileri  olmadan sadece client bilgileri ile refresh token kullanılmadan ulaşabilecek apiler oluşturulmuştur.
+Ayrıca projede Identity bilgileri olmadan,client bilgileri ile access token oluşturularak refresh token kullanılmadan ulaşılabilecek apiler oluşturulmuştur.
 Role,Claim ve Policy bazlı yetkilendirme yapılmıştır.
 
 ### Kullanılan Teknolojiler
