@@ -11,24 +11,19 @@ namespace SharedLibrary.Dtos
     public class ErrorDto
     {
         //Birden fazla hata olabilir.O yüzden liste olarak oluşturuyoruz.
-        public  List<String> Errors { get;private set; } //Private vermemizin sebebi bu propertyi burada set edeceğiz.Dışarıdan set edilmeyecek.
-        public  bool IsShow { get;private set; } //Gelen hatayı göstermek için oluşturulan property.Kullanıcıya gösterilecek hatalarda true olacak.Yazılımcıya gösterilecek hata da false olacak.
+        public List<String> Errors { get; private set; } = new List<string>(); //Private vermemizin sebebi bu propertyi burada set edeceğiz.Dışarıdan set edilmeyecek.
+        public bool IsShow { get; private set; }//Gelen hatayı göstermek için oluşturulan property.Kullanıcıya gösterilecek hatalarda true olacak.Yazılımcıya gösterilecek hata da false olacak.
 
-        public ErrorDto()
-        {
-            Errors = new List<string>();
-
-        }
-        public ErrorDto(string error , bool isShow)
+        public ErrorDto(string error, bool isShow)
         {
             Errors.Add(error);
-            isShow = true;
+            IsShow = isShow;
         }
-        public ErrorDto(List<string> errors,bool isShow)
+
+        public ErrorDto(List<string> errors, bool isShow)
         {
             Errors = errors;
             IsShow = isShow;
-           
         }
     }
 }

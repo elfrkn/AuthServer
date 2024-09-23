@@ -28,26 +28,29 @@ namespace AuthServer.Service.Services
             _userManager = userManager;
             _tokenOption = options.Value;
         }
-
         //Random refresh token dönecek
         private string CreateRefreshToken()
+
         {
             var numberByte = new Byte[32];
-            using var rnd = RandomNumberGenerator.Create();
-            rnd.GetBytes(numberByte);
-            return Convert.ToBase64String(numberByte);
 
+            using var rnd = RandomNumberGenerator.Create();
+
+            rnd.GetBytes(numberByte);
+
+            return Convert.ToBase64String(numberByte);
         }
+
 
         //Üyelik sistemi gereken token istediğimizde
         private IEnumerable<Claim> GetClaims(UserApp userApp, List<String> audiences)
         {
             var userList = new List<Claim>
             {
-            new Claim(ClaimTypes.NameIdentifier,userApp.Id),
-            new Claim(JwtRegisteredClaimNames.Email, userApp.Email),
-            new Claim(ClaimTypes.Name,userApp.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()) //Json i kimliklendirecek.
+               new Claim(ClaimTypes.NameIdentifier,userApp.Id),
+               new Claim(JwtRegisteredClaimNames.Email, userApp.Email),
+               new Claim(ClaimTypes.Name,userApp.UserName),
+               new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()) //Json i kimliklendirecek.
             };
 
             //Bir apiye istek yapıldığında bu tokenın audience bakıp gerçekten istek yapılmaya uygun mu kontrol edecek.Değilse geri çevirecek.
@@ -70,7 +73,6 @@ namespace AuthServer.Service.Services
 
         public TokenDto CreateToken(UserApp userApp)
         {
-
             var accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOption.AccessTokenExpiration);
             var refreshTokenExpiration = DateTime.Now.AddMinutes(_tokenOption.RefreshTokenExpiration);
             var securityKey = SignService.GetSymmetricSecurityKey(_tokenOption.SecurityKey);

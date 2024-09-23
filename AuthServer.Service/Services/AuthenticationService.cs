@@ -42,6 +42,7 @@ namespace AuthServer.Service.Services
             {
                 return Response<TokenDto>.Fail("Email or Password is wrong", 400, true);
             }
+
             var token = _tokenService.CreateToken(user);
 
             var userRefreshToken = await _userRefreshTokenService.Where(x => x.UserId == user.Id).SingleOrDefaultAsync();
@@ -74,7 +75,7 @@ namespace AuthServer.Service.Services
 
             return Response<ClientTokenDto>.Success(token, 200);
         }
-        public async Task<Response<TokenDto>> CreateTokenByRefreshAsync(string refreshToken)
+        public async Task<Response<TokenDto>> CreateTokenByRefreshToken(string refreshToken)
         {
             var existRefreshToken = await _userRefreshTokenService.Where(x => x.Code == refreshToken).SingleOrDefaultAsync();
 
@@ -100,7 +101,7 @@ namespace AuthServer.Service.Services
             return Response<TokenDto>.Success(tokenDto, 200);
         }
 
-        public async Task<Response<NoDataDto>> RevokeRefrehToken(string refreshToken)
+        public async Task<Response<NoDataDto>> RevokeRefreshToken(string refreshToken)
         {
             var existRefreshToken = await _userRefreshTokenService.Where(x => x.Code == refreshToken).SingleOrDefaultAsync();
             if (existRefreshToken == null)

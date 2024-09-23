@@ -9,6 +9,7 @@ using AuthServer.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SharedLibrary.Configurations;
 
 
@@ -37,6 +38,12 @@ builder.Services.AddIdentity<UserApp, IdentityRole>(Opt =>
     Opt.Password.RequireNonAlphanumeric = false;//Password için nonalfanumerik karakter zorunlu olmasın
 }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
+//Shared Librarydeki CustomTokenOption sınıfı ile appsettingsteki TokenOption ı haberleştiriyoruz.
+builder.Services.Configure<CustomTokenOption>(builder.Configuration.GetSection("TokenOption"));
+
+//Option Pattern:appjson içindeki datalara erişmek için
+builder.Services.Configure<List<Client>>(builder.Configuration.GetSection("Clients"));
+
 // Gelen Tokenı doğrulamak için 
 builder.Services.AddAuthentication(options =>
 {
@@ -45,7 +52,7 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opts =>
 {
     var tokenOptions = builder.Configuration.GetSection("TokenOption").Get<CustomTokenOption>();
-    opts.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    opts.TokenValidationParameters = new TokenValidationParameters
     {
         ValidIssuer = tokenOptions.Issuer,
         ValidAudience = tokenOptions.Audience[0],
@@ -61,11 +68,6 @@ builder.Services.AddAuthentication(options =>
 
 
 
-//Shared Librarydeki CustomTokenOption sınıfı ile appsettingsteki TokenOption ı haberleştiriyoruz.
-builder.Services.Configure<CustomTokenOption>(builder.Configuration.GetSection("TokenOption"));
-
-//Option Pattern:appjson içindeki datalara erişmek için
-builder.Services.Configure<List<Client>>(builder.Configuration.GetSection("Clients"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -82,7 +84,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
