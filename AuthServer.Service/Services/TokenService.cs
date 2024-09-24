@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedLibrary.Configurations;
+using SharedLibrary.Service;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -43,19 +44,23 @@ namespace AuthServer.Service.Services
 
 
         //Üyelik sistemi gereken token istediğimizde
-        private IEnumerable<Claim> GetClaims(UserApp userApp, List<String> audiences)
+        private async Task<IEnumerable<Claim>> GetClaims(UserApp userApp, List<String> audiences)
         {
+            var userRoles = await _userManager.GetRolesAsync(userApp);
+            //["admin" "manager"]
             var userList = new List<Claim>
             {
                new Claim(ClaimTypes.NameIdentifier,userApp.Id),
                new Claim(JwtRegisteredClaimNames.Email, userApp.Email),
                new Claim(ClaimTypes.Name,userApp.UserName),
-               new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()) //Json i kimliklendirecek.
+               new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()), //Json i kimliklendirecek.
+               new Claim("city",userApp.City), // Tokenın payloadına city bilgisini ekledik
+               new Claim("birth-date",userApp.BirthDate.ToShortDateString())
             };
 
             //Bir apiye istek yapıldığında bu tokenın audience bakıp gerçekten istek yapılmaya uygun mu kontrol edecek.Değilse geri çevirecek.
             userList.AddRange(audiences.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
-
+            userList.AddRange(userRoles.Select(x => new Claim(ClaimTypes.Role, x)));
             return userList;
         }
 
@@ -83,7 +88,7 @@ namespace AuthServer.Service.Services
                 issuer: _tokenOption.Issuer,
                 expires: accessTokenExpiration,
                  notBefore: DateTime.Now,
-                 claims: GetClaims(userApp, _tokenOption.Audience),
+                 claims: GetClaims(userApp, _tokenOption.Audience).Result,
                  signingCredentials: signingCredentials);
 
             var handler = new JwtSecurityTokenHandler();

@@ -3,6 +3,7 @@ using AuthServer.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharedLibrary.Exceptions;
 
 namespace AuthServerApi.Controllers
 {
@@ -11,6 +12,7 @@ namespace AuthServerApi.Controllers
     public class UserController : CustomBaseController
     {
         private readonly IUserService _userService;
+
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -20,6 +22,7 @@ namespace AuthServerApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserDto createUserDto)
         {
+           
             return ActionResultInstance(await _userService.CreateUserAsync(createUserDto));
         }
 
@@ -27,7 +30,14 @@ namespace AuthServerApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUser()
         {
-            return ActionResultInstance(await _userService.GetUserByName(HttpContext.User.Identity.Name));
+            return ActionResultInstance(await _userService.GetUserByNameAsync(HttpContext.User.Identity.Name));
+        }
+
+        // Role göre kayıt etmek
+        [HttpPost("CreateUserRoles/{userName}")]
+        public async Task<IActionResult> CreateUserRoles(string userName)
+        {
+            return ActionResultInstance(await _userService.CreateUserRoles(userName));
         }
     }
 }
