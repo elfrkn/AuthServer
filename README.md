@@ -49,8 +49,9 @@ Role,Claim ve Policy bazlı yetkilendirme yapılmıştır.
 #### Custom Exception  :star:
 ![CustomException](https://github.com/user-attachments/assets/19dd9e34-20d3-439a-bf2d-09ee2194a087)
 
-#### Jwt with UserRole  :star:
-![Jwt](https://github.com/user-attachments/assets/3f672f77-c6b4-4493-b1e6-fc61115ef58b)
+#### Jwt with UserRole/Claim-Based and Policy-Based Authorization  :star:
+![Ekran görüntüsü 2024-09-24 193729](https://github.com/user-attachments/assets/2ade71eb-27d2-4573-99f8-86875efa071d)
+
 
 
 
